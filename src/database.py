@@ -1,4 +1,4 @@
-#!env python3
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 # based on: http://www.zodb.org/en/latest/documentation/articles/ZODB1.html#a-simple-example
 
