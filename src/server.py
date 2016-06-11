@@ -26,13 +26,13 @@ def get_file(file_loc):
         return ""
 
 
-root_page = get_file("pages/root.html")
+data_root_page = get_file("pages/root.html")
 @app.route('/')
 def root_page():
-    return root_page
+    return data_root_page
 
 
-logged_page = get_file("pages/logged.html")
+data_logged_page = get_file("pages/logged.html")
 @app.route('/logged')
 def logged_page():
     text = ""
@@ -45,7 +45,7 @@ def logged_page():
     print("args:", request.args)
 
     try:
-        ret = "<!DOCTYPE html><html><head><meta charset=\"utf-8\"></head><body>" + text + "<div><class='oi'><br><b>oi sofia</body></html>"
+        ret = "<!DOCTYPE html><html><head><meta charset=\"utf-8\"></head><body>" + text + "</body></html>"
     except:
         ret = "<!DOCTYPE html><html><head><meta charset=\"utf-8\"></head><body></body></html>"
     return ret

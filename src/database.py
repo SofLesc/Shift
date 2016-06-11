@@ -18,8 +18,14 @@ class User(Persistent):
 
 
 class Place(Persistent):
-    def __init__(self, place_id, place_name, place_location, place_cost):
-        self.place_id = place_id
+    places_count = None
+
+    def get_place_id(cls):
+        cls.places_count += 1
+        return cls.places_count
+
+    def __init__(self, place_name, place_location, place_cost):
+        self.place_id = Place.get_place_id()
         self.place_name = place_name
         self.place_location = place_location
         self.place_cost = place_cost
@@ -56,8 +62,11 @@ class Database:
             self.root['transactions'] = dict()
         if 'transaction_count' not in self.root:
             self.root['transaction_count'] = 0
+        if 'places_count' not in self.root:
+            self.root['places_count'] = 0
         
         Transaction.transaction_id = self.root['transaction_count']
+        Place.places_count = self.root['places_count']
 
         self.user_list = self.root['user_list']
         self.places_list = self.root['places_list']
@@ -65,6 +74,7 @@ class Database:
 
     def __exit__(self, exc_type, exc_val, exc_tb):
         self.root['transaction_count'] = Transaction.transaction_id
+        self.root['places_count'] = Place.places_count
         transaction.commit()
         self.conn.close()
 
