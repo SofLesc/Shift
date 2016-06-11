@@ -1,9 +1,9 @@
 # Shift
 
-To run using our virtual environment use:
+Install required files:
 
-source virtual_environment/bin/activate
+sudo apt-get install python-pip
 
-To close run:
+sudo pip install python-flask
 
-deactivate
+sudo pip install python-openssl
