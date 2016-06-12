@@ -229,4 +229,4 @@ def get_image():
     except:
         return send_file("bug.png", mimetype='image/png')
 
-app.run(host='quiet-castle-70625.herokuapp.com', port=8080, ssl_context=context, threaded=True, debug=True)
+app.run(host='0.0.0.0', port=8080, ssl_context=context, threaded=True, debug=True)
