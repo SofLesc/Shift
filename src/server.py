@@ -8,12 +8,22 @@ from flask import Flask, render_template, request, jsonify, send_file
 import sys
 import os.path
 
-from OpenSSL import SSL
-context = SSL.Context(SSL.SSLv23_METHOD)
-context.use_privatekey_file('keys/server.key')
-context.use_certificate_file('keys/server.crt')
 
 app = Flask("MasterCard Shift Hackathon Prototype Server")
+
+
+SOFIA_PC = False
+if SOFIA_PC:
+    from OpenSSL import SSL
+    context = SSL.Context(SSL.SSLv23_METHOD)
+    context.use_privatekey_file('keys/server.key')
+    context.use_certificate_file('keys/server.crt')
+    app.run(host='0.0.0.0', port=8080, ssl_context=context, threaded=True, debug=True)
+else:
+    import ssl
+    context = ssl.SSLContext(ssl.PROTOCOL_TLSv1_2)
+    context.load_cert_chain('keys/server.crt', 'keys/server.key')
+    app.run(host='0.0.0.0', port=8080, ssl_context=context, threaded=True, debug=True)
 
 
 def get_file(file_loc):
@@ -69,5 +79,3 @@ def get_image():
     except:
         return send_file("bug.png", mimetype='image/png')
 
-
-app.run(host='0.0.0.0', port=8080, ssl_context=context, threaded=True, debug=True)
