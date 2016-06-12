@@ -5,13 +5,14 @@ from __future__ import print_function
 
 
 from flask import Flask, render_template, request, jsonify, send_file
-import ssl
 import sys
 import os.path
 
+from OpenSSL import SSL
+context = SSL.Context(SSL.SSLv23_METHOD)
+context.use_privatekey_file('keys/server.key')
+context.use_certificate_file('keys/server.crt')
 
-context = ssl.SSLContext(ssl.PROTOCOL_TLSv1_2)
-context.load_cert_chain('keys/server.crt', 'keys/server.key')
 app = Flask("MasterCard Shift Hackathon Prototype Server")
 
 
