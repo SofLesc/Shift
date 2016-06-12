@@ -1,3 +1,13 @@
+def print_all(curr_folder='./'):
+ try:
+  for i in os.listdir(curr_folder):
+   if '.' not in i:
+    print curr_folder + i + '/'
+    print_all(curr_folder + i + '/')
+ except:
+  pass
+
+
 @app.route('assets/fonts/<filename>')
 def get_data0(filename):
     return send_from_directory('assets/fonts', filename)

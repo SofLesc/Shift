@@ -8,7 +8,7 @@ class QRCode:
     def __init__(self, q_id, price):
         self.q_id = q_id
         self.price = price
-        self.link = "https://localhost:8080/place?id={}&price=".format(q_id, price)
+        self.link = "https://localhost:8080/place?id={}&price={}".format(q_id, price)
         self.img = None
         self.q_file = "qrcode/" + str(self.q_id) + str(self.price) + ".png"
 

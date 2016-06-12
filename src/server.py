@@ -13,7 +13,7 @@ import os.path
 
 app = Flask("MasterCard Shift Hackathon Prototype Server")
 
-SOFIA_PC = True
+SOFIA_PC = False
 if SOFIA_PC:
     from OpenSSL import SSL
     context = SSL.Context(SSL.SSLv23_METHOD)
@@ -49,7 +49,7 @@ def root_page():
     print("place:", plac_id)
     print("price:", pric_id)
     return data_1 +"<h3 class=\"section-title\" id=\"place\">" + str(plac_id) + "</h3><h4 class=\"section-title\" id=\"price\">" + str(pric_id)	 +"$</h4>\"" + data_2
-		
+
 
 
 data_place_page = get_file("pages/place.html")
@@ -96,14 +96,20 @@ def create_page():
         if i not in request.args:
             valid = False
             break
-    print(request.args)
+    # print(request.args)
     if valid:
+        # print("valid")
         # if contains all the information create the place and qrcode:
         place = Place(request.args['name'], str(request.args['location']), str(request.args['price']))
-        global db
+        db = Database.Instance()
         db.add_place(place.place_id, place)
-        qr = qrcode_handler.QRCode(place.place_id, place.price)
-        return data_create_page_redirect.replace("$PAGE$", "/get_image?id=" + str(qr.q_id))
+        qr = qrcode_handler.QRCode(place.place_id, place.place_cost)
+        qr.save_img()
+        print("image saved to", qr.q_file)
+        import copy
+        e = copy.copy(data_create_page_redirect)
+        e = e.replace("$PAGE$", "/get_image?id=" + str(qr.q_file.split('/')[-1]))
+        return e
     else:
         return data_create_page
 
@@ -187,5 +193,4 @@ def get_image():
     except:
         return send_file("bug.png", mimetype='image/png')
 
-db = Database()
 app.run(host='127.0.0.1', port=8080, ssl_context=context, threaded=True, debug=True)
