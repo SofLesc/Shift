@@ -26,7 +26,7 @@ populate()
 
 app = Flask("MasterCard Shift Hackathon Prototype Server")
 
-SOFIA_PC = False
+SOFIA_PC = True
 if SOFIA_PC:
     from OpenSSL import SSL
     context = SSL.Context(SSL.SSLv23_METHOD)
@@ -76,7 +76,7 @@ def root_page():
         place_name = "Desconhecido"
     price = request.args.get('price')
 
-    return data_root_page.replace("$$FIRST$$", '<h3 class="section-title" id="place">' + str(place_name) + "</h3><h4 class=\"section-title\" id=\"price\">" + str(price) +"$</h4>").replace("$$SECOND$$", "place_id={}&price={}&".format(place_id, price))
+    return data_root_page.replace("$$FIRST$$", '<h3 class="section-title" id="place">' + str(place_name) + "</h3><h4 class=\"section-title alert alert-success\" id=\"price\">" + str(price) +"$</h4>").replace("$$SECOND$$", "place_id={}&price={}&".format(place_id, price))
 
 
 data_place_page = get_file("pages/pay.html")
