@@ -11,19 +11,6 @@ import sys
 import os.path
 
 
-def populate():
-    db = Database.Instance()
-    p = Place("MASP", "Av. Paulista", "15")
-    db.add_place(p.place_id, p)
-    p = Place("Cristo Redentor", "Rio de Janeiro", "45")
-    db.add_place(p.place_id, p)
-    p = Place("Saída 1 - Shopping Dom Pedro", "Rodovia Dom Pedro", "12")
-    db.add_place(p.place_id, p)
-    p = Place("Pedágio 1 - Rodovia Bandeirantes", "Rodovia Bandeirantas Km 30", "2.5")
-    db.add_place(p.place_id, p)
-
-populate()
-
 app = Flask("MasterCard Shift Hackathon Prototype Server")
 
 SOFIA_PC = True
@@ -50,46 +37,37 @@ def get_file(file_loc):
         return "<font size=16>This page is missing on the server: " + file_loc
 
 
-data_root_page = get_file("pages/index.html")
-place_name = ""
-price = -1
+#data_root_page = get_file("pages/index.html")
+data_1 = get_file("pages/1.html")
+data_2 = get_file("pages/2.html")
+
+plac_id = -1
+pric_id = -1
+
 @app.route('/')
 def root_page():
-    """    user_name = ""
-    user_last_name = ""
-    try:
-        user_id = request.args['id']
-        db = Database.Instance()
-        transactions = db.get_transactions()"""
-    place_id = request.args.get('place_id')
-    db = Database.Instance()
-    print(db.root['places_list'])
-    try:
-        place = db.get_place(int(place_id))
-        if place is not None:
-               global place_name
-               place_name = place.place_name
-        else:
-               global place_name
-               place_name = "Desconhecido"
-    except:
-        global place_name
-        place_name = "Desconhecido"
-    global price
-    price = request.args.get('price')
+    global plac_id, pric_id
+    plac_id = request.args.get('place_id')
+    pric_id = request.args.get('price_id')
+    print("place:", plac_id)
+    print("price:", pric_id)
+#   return data_1 +"<h3 class=\"section-title\" id=\"place\">" + str(plac_id) + "</h3><h4 class=\"section-title\" id=\"price\">" + str(pric_id)	 #   +"$</h4>" + data_2
 
-    return data_root_page.replace("$$FIRST$$", '<h3 class="section-title" id="place">' + str(place_name) + "</h3><h4 class=\"section-title alert alert-success\" id=\"price\">R$" + str(price) +"</h4>").replace("$$SECOND$$", "place_id={}&price={}&".format(place_id, price))
+    return data_1 +"<h3 class=\"section-title\" id=\"place\">" + str(plac_id) + "</h3><h4 class=\"section-title\" id=\"price\">" + str(pric_id)	  +"$</h4>" + data_2
+		
 
 
-data_user_page = get_file("pages/user.html")
+data_place_page = get_file("pages/place.html")
 
 
-@app.route('/user')
+@app.route('/place')
 def place_page():
-    return data_user_page
+    return data_place_page
 
 
-data_logged_page = get_file("pages/checkout.html")
+#data_logged_page = get_file("pages/checkout.html")
+data_check1 = get_file("pages/check1.html")
+data_check2 = get_file("pages/check2.html")
 
 
 @app.route('/logged')
@@ -103,15 +81,14 @@ def logged_page():
     print("text:", text)
     print("args:", request.args)
 
-    #    try:
-    #        ret = "<!DOCTYPE html><html><head><meta charset=\"utf-8\"></head><body>" + text + "<img src=\"https://graph.facebook.com/{}/picture?type=large\"></img></body></html>".format(request.args['id'])
-    #    except:
-    #        ret = "<!DOCTYPE html><html><head><meta charset=\"utf-8\"></head><body></body></html>"
-    #    return ret
-    #    return "logado", request.args['first_name'], request.args['last_name']
+#    try:
+#        ret = "<!DOCTYPE html><html><head><meta charset=\"utf-8\"></head><body>" + text + "<img src=\"https://graph.facebook.com/{}/picture?type=large\"></img></body></html>".format(request.args['id'])
+#    except:
+#        ret = "<!DOCTYPE html><html><head><meta charset=\"utf-8\"></head><body></body></html>"
+#    return ret
+#    return "logado", request.args['first_name'], request.args['last_name']
 
-    return data_logged_page.replace("$$FIRST$$", '<img class="user" id="profile-img" alt="Buy with MasterPass" src="https://graph.facebook.com/'+ request.args['id'] +'/picture?type=large" />').replace("$$SECOND$$", '<h3 class="section-title" id="place">'+ str(place_name) +'</h3><h4 class="section-title" id="price">R$'+ str(price) +'</h4>')).replace("$$THIRD$$", str(request.args['first_name']))
-
+    return data_check1 + "<img id=\"masterpass-img\" alt=\"Buy with MasterPass\" src=\"https://graph.facebook.com/"+ request.args['id'] +"/picture?type=large\" /> <h3 class=\"section-title\" id=\"place\">"+ str(plac_id) +"</h3><h4 class=\"section-title\" id=\"price\">"+ str(pric_id) +"</h4>" + data_check2
 
 
 data_create_page = get_file("pages/create_qrcode.html")
@@ -126,20 +103,14 @@ def create_page():
         if i not in request.args:
             valid = False
             break
-    # print(request.args)
+    print(request.args)
     if valid:
-        # print("valid")
         # if contains all the information create the place and qrcode:
         place = Place(request.args['name'], str(request.args['location']), str(request.args['price']))
-        db = Database.Instance()
+        global db
         db.add_place(place.place_id, place)
-        qr = qrcode_handler.QRCode(place.place_id, place.place_cost)
-        qr.save_img()
-        print("image saved to", qr.q_file)
-        import copy
-        e = copy.copy(data_create_page_redirect)
-        e = e.replace("$PAGE$", "/get_image?id=" + str(qr.q_file.split('/')[-1]))
-        return e
+        qr = qrcode_handler.QRCode(place.place_id, place.price)
+        return data_create_page_redirect.replace("$PAGE$", "/get_image?id=" + str(qr.q_id))
     else:
         return data_create_page
 
@@ -214,11 +185,6 @@ def get_data13(filename):
     return send_from_directory('.', filename)
 
 
-@app.route('/Archive/<filename>')
-def get_data14(filename):
-    return send_from_directory('Archive', filename)
-
-
 @app.route('/get_image')
 def get_image():
     try:
@@ -228,4 +194,5 @@ def get_image():
     except:
         return send_file("bug.png", mimetype='image/png')
 
+db = Database()
 app.run(host='127.0.0.1', port=8080, ssl_context=context, threaded=True, debug=True)

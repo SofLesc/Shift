@@ -269,11 +269,6 @@ img {
     width: 100%;
 }
 
-.profile {
-  position: relative;
-  padding-top: 20px;
-}
-
 hr {
     margin-top: 15px;
     margin-bottom: 15px;

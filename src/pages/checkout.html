@@ -59,11 +59,12 @@
                 }
             } else {
                 // The token contains id, last4, and card type
-                var token = data.cardToken["id"];
+                //var token = data.cardToken["id"];
                 // Insert the token into the form so it gets submitted to the server
-                $paymentForm.append("<input type='hidden' name='simplifyToken' value='" + token + "' />");
+                //$paymentForm.append("<input type='hidden' name='simplifyToken' value='" + token + "' />");
                 // Submit the form to the server
-                $paymentForm.get(0).submit();
+                //$paymentForm.get(0).submit();
+		window.location.href = "https://localhost:8080/user";
             }
         }
         function masterPassCanceledHandler () {
@@ -95,7 +96,7 @@
     <header class="header">
         <nav class="navbar navbar-custom" role="navigation">
             <div class="container">
-                $$FIRST$$
+                
                 <div class="navbar-header">
                     <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#custom-collapse">
                         <span class="sr-only">Toggle navigation</span>
@@ -103,7 +104,7 @@
                         <span class="icon-bar"></span>
                         <span class="icon-bar"></span>
                     </button>
-                    <!-- <a class="navbar-brand" href="index.html"><img src="assets/images/logo.png" alt=""></a> -->
+		<a class="navbar-brand" href="#"><img src="Archive/logo.png" id="logo-head" alt=""></a>
                 </div>
                 <div class="collapse navbar-collapse" id="custom-collapse">
                     <ul class="nav navbar-nav navbar-right">
@@ -115,6 +116,15 @@
             </div><!-- .container -->
         </nav>
     </header><!-- End Navigation -->
+
+      <center> <div class="profile">
+       $$FIRST$$ 
+      </div> 
+      
+      <div class="profile">  
+        $$THIRD$$
+      </div>  
+      </center>
 
     <!-- About Section -->
     <section id="about" class="about-section section-padding">
