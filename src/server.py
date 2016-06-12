@@ -17,7 +17,7 @@ def populate():
     db.add_place(p.place_id, p)
     p = Place("Cristo Redentor", "Rio de Janeiro", "45")
     db.add_place(p.place_id, p)
-    p = Place("Saída 1 - Shopping Dom Pedro", "Rodovia Dom Pedro", "12")
+    p = Place("Saída 2 - Shopping Dom Pedro", "Rodovia Dom Pedro", "12")
     db.add_place(p.place_id, p)
     p = Place("Pedágio 1 - Rodovia Bandeirantes", "Rodovia Bandeirantas Km 30", "2.5")
     db.add_place(p.place_id, p)
@@ -53,6 +53,8 @@ def get_file(file_loc):
 data_root_page = get_file("pages/index.html")
 place_name = ""
 price = -1
+
+
 @app.route('/')
 def root_page():
     """    user_name = ""
@@ -111,7 +113,6 @@ def logged_page():
     #    return "logado", request.args['first_name'], request.args['last_name']
 
     return data_logged_page.replace("$$FIRST$$", '<img class="user" id="profile-img" alt="Buy with MasterPass" src="https://graph.facebook.com/'+ request.args['id'] +'/picture?type=large" />').replace("$$SECOND$$", '<h3 class="section-title" id="place">'+ str(place_name) +'</h3><h4 class="section-title" id="price">'+ str(price) +'$</h4>')
-
 
 
 data_create_page = get_file("pages/create_qrcode.html")
@@ -228,4 +229,4 @@ def get_image():
     except:
         return send_file("bug.png", mimetype='image/png')
 
-app.run(host='127.0.0.1', port=8080, ssl_context=context, threaded=True, debug=True)
+app.run(host='quiet-castle-70625.herokuapp.com', port=8080, ssl_context=context, threaded=True, debug=True)
