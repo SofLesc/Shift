@@ -51,10 +51,8 @@ def get_file(file_loc):
 
 
 data_root_page = get_file("pages/index.html")
-
-plac_id = -1
-pric_id = -1
-
+place_name = ""
+price = -1
 @app.route('/')
 def root_page():
     """    user_name = ""
@@ -69,11 +67,15 @@ def root_page():
     try:
         place = db.get_place(int(place_id))
         if place is not None:
-            place_name = place.place_name
+               global place_name
+               place_name = place.place_name
         else:
-            place_name = "Desconhecido"
+               global place_name
+               place_name = "Desconhecido"
     except:
+        global place_name
         place_name = "Desconhecido"
+    global price
     price = request.args.get('price')
 
     return data_root_page.replace("$$FIRST$$", '<h3 class="section-title" id="place">' + str(place_name) + "</h3><h4 class=\"section-title\" id=\"price\">" + str(price) +"$</h4>").replace("$$SECOND$$", "place_id={}&price={}&".format(place_id, price))
@@ -87,9 +89,7 @@ def place_page():
     return data_place_page
 
 
-#data_logged_page = get_file("pages/checkout.html")
-data_check1 = get_file("pages/check1.html")
-data_check2 = get_file("pages/check2.html")
+data_logged_page = get_file("pages/check1.html")
 
 
 @app.route('/logged')
@@ -110,7 +110,8 @@ def logged_page():
     #    return ret
     #    return "logado", request.args['first_name'], request.args['last_name']
 
-    return data_check1 + "<img id=\"masterpass-img\" alt=\"Buy with MasterPass\" src=\"https://graph.facebook.com/"+ request.args['id'] +"/picture?type=large\" /> <h3 class=\"section-title\" id=\"place\">"+ str(plac_id) +"</h3><h4 class=\"section-title\" id=\"price\">"+ str(pric_id) +"</h4>" + data_check2
+    return data_logged_page.replace("$$FIRST$$", '<img id="masterpass-img" alt="Buy with MasterPass" src="https://graph.facebook.com/'+ request.args['id'] +'/picture?type=large" /> <h3 class="section-title" id="place">'+ str(place_name) +'</h3><h4 class="section-title" id="price">'+ str(price) +"$</h4>")
+
 
 
 data_create_page = get_file("pages/create_qrcode.html")
