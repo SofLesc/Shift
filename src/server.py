@@ -26,7 +26,7 @@ populate()
 
 app = Flask("MasterCard Shift Hackathon Prototype Server")
 
-SOFIA_PC = True
+SOFIA_PC = False
 if SOFIA_PC:
     from OpenSSL import SSL
     context = SSL.Context(SSL.SSLv23_METHOD)
@@ -89,7 +89,7 @@ def place_page():
     return data_place_page
 
 
-data_logged_page = get_file("pages/check1.html")
+data_logged_page = get_file("pages/checkout.html")
 
 
 @app.route('/logged')
@@ -110,7 +110,7 @@ def logged_page():
     #    return ret
     #    return "logado", request.args['first_name'], request.args['last_name']
 
-    return data_logged_page.replace("$$FIRST$$", '<img id="masterpass-img" alt="Buy with MasterPass" src="https://graph.facebook.com/'+ request.args['id'] +'/picture?type=large" /> <h3 class="section-title" id="place">'+ str(place_name) +'</h3><h4 class="section-title" id="price">'+ str(price) +"$</h4>")
+    return data_logged_page.replace("$$FIRST$$", '<img class="user" id="profile-img" alt="Buy with MasterPass" src="https://graph.facebook.com/'+ request.args['id'] +'/picture?type=large" /> <h3 class="section-title" id="place">'+ str(place_name) +'</h3><h4 class="section-title" id="price">'+ str(price) +"$</h4>")
 
 
 
