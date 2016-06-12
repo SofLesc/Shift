@@ -13,14 +13,28 @@ import os.path
 
 def populate():
     db = Database.Instance()
+
     p = Place("MASP", "Av. Paulista", "15")
+    qr = qrcode_handler.QRCode(p.place_id, p.place_cost)
+    #qr.save_img()
     db.add_place(p.place_id, p)
+
+
     p = Place("Cristo Redentor", "Rio de Janeiro", "45")
+    qr = qrcode_handler.QRCode(p.place_id, p.place_cost)
+    #qr.save_img()
     db.add_place(p.place_id, p)
+
     p = Place("Saída 2 - Shopping Dom Pedro", "Rodovia Dom Pedro", "12")
+    qr = qrcode_handler.QRCode(p.place_id, p.place_cost)
+    #qr.save_img()
     db.add_place(p.place_id, p)
+
     p = Place("Pedágio 1 - Rodovia Bandeirantes", "Rodovia Bandeirantas Km 30", "2.5")
+    qr = qrcode_handler.QRCode(p.place_id, p.place_cost)
+    #qr.save_img()
     db.add_place(p.place_id, p)
+
 
 populate()
 
