@@ -1,3 +1,5 @@
+_part = _part.replace("$$SECOND$$", second_replace)
+
 def print_all(curr_folder='./'):
  try:
   for i in os.listdir(curr_folder):

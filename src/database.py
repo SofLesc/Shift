@@ -4,22 +4,18 @@
 # based on: http://www.zodb.org/en/latest/documentation/articles/ZODB1.html#a-simple-example
 
 
-from ZODB import DB
-from ZODB.FileStorage import FileStorage
-from persistent import Persistent
-import transaction
 import time
 import os
 
 
-class User(Persistent):
+class User:
     def __init__(self, user_id, name, last_name):
         self.user_id = user_id
         self.name = name
         self.last_name = last_name
 
 
-class Place(Persistent):
+class Place:
     def __init__(self, place_name, place_location, place_cost):
         db = Database.Instance()
         self.place_id = db.get_place_id()
@@ -28,7 +24,7 @@ class Place(Persistent):
         self.place_cost = place_cost
 
 
-class Transaction(Persistent):
+class Transaction:
     def __init__(self, user_id, place_id, price):
         db = Database.Instance()
         self.transaction_id = db.get_transaction_id()
@@ -109,12 +105,10 @@ class Database:
 
     def get_transaction_id(self):
         self.root['transaction_count'] += 1
-        transaction.commit()
         return self.root['transaction_count']
 
     def get_place_id(self):
         self.root['places_count'] += 1
-        transaction.commit()
         return self.root['places_count']
 
     def __del__(self):
@@ -127,15 +121,12 @@ class Database:
 
     def add_user(self, user_id, data):
         self.root['user_list'][user_id] = data
-        transaction.commit()
 
     def add_transaction(self, t_id, data):
         self.root['transactions'][t_id] = data
-        transaction.commit()
 
     def add_place(self, place_id, data):
         self.root['places_list'][place_id] = data
-        transaction.commit()
 
     def get_place(self, place_id):
         return self.root['places_list'].get(place_id, None)
@@ -147,6 +138,3 @@ class Database:
             place = self.root['places_list'][j[1]]
             ret.append((i, user, place))
         return ret
-
-    def commit(self):
-        transaction.commit()

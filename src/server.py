@@ -13,14 +13,28 @@ import os.path
 
 def populate():
     db = Database.Instance()
+
     p = Place("MASP", "Av. Paulista", "15")
+    qr = qrcode_handler.QRCode(p.place_id, p.place_cost)
+    #qr.save_img()
     db.add_place(p.place_id, p)
+
+
     p = Place("Cristo Redentor", "Rio de Janeiro", "45")
+    qr = qrcode_handler.QRCode(p.place_id, p.place_cost)
+    #qr.save_img()
     db.add_place(p.place_id, p)
-    p = Place("Saída 1 - Shopping Dom Pedro", "Rodovia Dom Pedro", "12")
+
+    p = Place("Saída 2 - Shopping Dom Pedro", "Rodovia Dom Pedro", "12")
+    qr = qrcode_handler.QRCode(p.place_id, p.place_cost)
+    #qr.save_img()
     db.add_place(p.place_id, p)
+
     p = Place("Pedágio 1 - Rodovia Bandeirantes", "Rodovia Bandeirantas Km 30", "2.5")
+    qr = qrcode_handler.QRCode(p.place_id, p.place_cost)
+    #qr.save_img()
     db.add_place(p.place_id, p)
+
 
 populate()
 
@@ -53,6 +67,8 @@ def get_file(file_loc):
 data_root_page = get_file("pages/index.html")
 place_name = ""
 price = -1
+
+
 @app.route('/')
 def root_page():
     """    user_name = ""
@@ -78,7 +94,7 @@ def root_page():
     global price
     price = request.args.get('price')
 
-    return data_root_page.replace("$$FIRST$$", '<h3 class="section-title" id="place">' + str(place_name) + "</h3><h4 class=\"section-title alert alert-success\" id=\"price\">R$" + str(price) +"</h4>").replace("$$SECOND$$", "place_id={}&price={}&".format(place_id, price))
+    return data_root_page.replace("$$FIRST$$", '<h3 class="section-title" id="place">' + str(place_name) + "</h3><h4 class=\"section-title alert alert-success\" id=\"price\">" + str(price) +"$</h4>").replace("$$SECOND$$", "place_id={}&price={}&".format(str(place_id), str(price)))
 
 
 data_user_page = get_file("pages/user.html")
@@ -111,8 +127,6 @@ def logged_page():
     #    return "logado", request.args['first_name'], request.args['last_name']
 
     return data_logged_page.replace("$$FIRST$$", '<img class="user" id="profile-img" alt="Buy with MasterPass" src="https://graph.facebook.com/'+ request.args['id'] +'/picture?type=large" />').replace("$$SECOND$$", '<h3 class="section-title" id="place">'+ str(place_name) +'</h3><h4 class="section-title" id="price">R$'+ str(price) +'</h4>')).replace("$$THIRD$$", str(request.args['first_name']))
-
-
 
 data_create_page = get_file("pages/create_qrcode.html")
 data_create_page_redirect = get_file("pages/create_qrcode_redirect.html")
@@ -228,4 +242,4 @@ def get_image():
     except:
         return send_file("bug.png", mimetype='image/png')
 
-app.run(host='127.0.0.1', port=8080, ssl_context=context, threaded=True, debug=True)
+app.run(host='0.0.0.0', port=8080, ssl_context=context, threaded=True, debug=True)
