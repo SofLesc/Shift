@@ -3,16 +3,17 @@
 
 from __future__ import print_function
 
+import qrcode_handler
+from database import Database, Place, User, Transaction
 
-from flask import Flask, render_template, request, jsonify, send_file
+from flask import Flask, render_template, request, jsonify, send_file, send_from_directory
 import sys
 import os.path
 
 
 app = Flask("MasterCard Shift Hackathon Prototype Server")
 
-
-SOFIA_PC = True
+SOFIA_PC = False
 if SOFIA_PC:
     from OpenSSL import SSL
     context = SSL.Context(SSL.SSLv23_METHOD)
@@ -36,19 +37,25 @@ def get_file(file_loc):
         return "<font size=16>This page is missing on the server: " + file_loc
 
 
-data_root_page = get_file("pages/root.html")
+data_root_page = get_file("pages/index.html")
+
+
 @app.route('/')
 def root_page():
     return data_root_page
 
 
 data_place_page = get_file("pages/place.html")
+
+
 @app.route('/place')
 def place_page():
     return data_place_page
 
 
 data_logged_page = get_file("pages/logged.html")
+
+
 @app.route('/logged')
 def logged_page():
     text = ""
@@ -68,7 +75,90 @@ def logged_page():
 #    return "logado", request.args['first_name'], request.args['last_name']
 
 
+data_create_page = get_file("pages/create_qrcode.html")
+data_create_page_redirect = get_file("pages/create_qrcode_redirect.html")
+
+
+@app.route('/create')
+def create_page():
+    valid = True
+    required = ['name', 'location', 'price']
+    for i in required:
+        if i not in request.args:
+            valid = False
+            break
+    print(request.args)
+    if valid:
+        # if contains all the information create the place and qrcode:
+        place = Place(request.args['name'], str(request.args['location']), str(request.args['price']))
+        global db
+        db.add_place(place.place_id, place)
+        qr = qrcode_handler.QRCode(place.place_id, place.price)
+        return data_create_page_redirect.replace("$PAGE$", "/get_image?id=" + str(qr.q_id))
+    else:
+        return data_create_page
+
+@app.route('/assets/fonts/<filename>')
+def get_data0(filename):
+    return send_from_directory('assets/fonts', filename)
+
+@app.route('/assets/fonts/fontawesome/<filename>')
+def get_data1(filename):
+    return send_from_directory('assets/fonts/fontawesome', filename)
+
+@app.route('/assets/css/<filename>')
+def get_data2(filename):
+    return send_from_directory('assets/css', filename)
+
+@app.route('/assets/images/<filename>')
+def get_data3(filename):
+    return send_from_directory('assets/images', filename)
+
+@app.route('/assets/images/blog/<filename>')
+def get_data4(filename):
+    return send_from_directory('assets/images/blog', filename)
+
+@app.route('/assets/images/works/<filename>')
+def get_data5(filename):
+    return send_from_directory('assets/images/works', filename)
+
+@app.route('/assets/images/ico/<filename>')
+def get_data6(filename):
+    return send_from_directory('assets/images/ico', filename)
+
+@app.route('/assets/bootstrap/<filename>')
+def get_data7(filename):
+    return send_from_directory('assets/bootstrap', filename)
+
+@app.route('/assets/bootstrap/fonts/<filename>')
+def get_data8(filename):
+    return send_from_directory('assets/bootstrap/fonts', filename)
+
+@app.route('/assets/bootstrap/css/<filename>')
+def get_data9(filename):
+    return send_from_directory('assets/bootstrap/css', filename)
+
+@app.route('/assets/bootstrap/js/<filename>')
+def get_data10(filename):
+    return send_from_directory('assets/bootstrap/js', filename)
+
+@app.route('/assets/js/<filename>')
+def get_data11(filename):
+    return send_from_directory('assets/js', filename)
+
+@app.route('/assets/<filename>')
+def get_data12(filename):
+    return send_from_directory('assets', filename)
+
+@app.route('/<filename>')
+def get_data13(filename):
+    return send_from_directory('.', filename)
+
+
+
 @app.route('/get_image')
+
+
 def get_image():
     try:
         filename = "qrcode/" + request.args.get('id')
@@ -76,4 +166,6 @@ def get_image():
             return send_file(filename, mimetype='image/png')
     except:
         return send_file("bug.png", mimetype='image/png')
+
+db = Database()
 app.run(host='0.0.0.0', port=8080, ssl_context=context, threaded=True, debug=True)

@@ -13,7 +13,6 @@ class QRCode:
         self.q_file = "qrcode/" + str(self.q_id) + str(self.price) + ".png"
 
     def gen_img(self):
-
         qr = qrcode.QRCode(
             version=1,
             error_correction=qrcode.constants.ERROR_CORRECT_H,

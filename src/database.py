@@ -18,96 +18,124 @@ class User(Persistent):
         self.name = name
         self.last_name = last_name
 
+places_count = None
+
+
+def get_place_id():
+    global places_count
+    print(places_count)
+    places_count += 1
+    return places_count
+
 
 class Place(Persistent):
-    places_count = None
-
-    def get_place_id(cls):
-        cls.places_count += 1
-        return cls.places_count
-
     def __init__(self, place_name, place_location, place_cost):
-        self.place_id = Place.get_place_id()
+        self.place_id = get_place_id()
         self.place_name = place_name
         self.place_location = place_location
         self.place_cost = place_cost
 
 
-class Transaction(Persistent):
-    transaction_id = None
-    
-    def get_transaction_id(cls):
-        cls.transaction_id += 1
-        return cls.transaction_id
+transaction_id = None
 
+
+def get_transaction_id():
+    global transaction_id
+    print(transaction_id)
+    transaction_id += 1
+    return transaction_id
+
+
+class Transaction(Persistent):
     def __init__(self, user_id, place_id):
-        self.transaction_id = Transaction.get_transaction_id()
+        self.transaction_id = get_transaction_id()
         self.user_id = user_id
         self.place_id = place_id
         self.time = time.time()
 
 
 class Database:
-    def __init__(self):
-        # setup the database
-        if not os.path.isdir('db'):
-            os.mkdir('db')
+    class __Database:
+        def __init__(self):
+            # setup the database
+            if not os.path.isdir('db'):
+                os.mkdir('db')
 
-        storage = FileStorage('db/database.fs')
-        db = DB(storage)
-        self.conn = db.open()
-        self.root = self.conn.root()
+            storage = FileStorage('db/database.fs')
+            db = DB(storage)
+            self.conn = db.open()
+            self.root = self.conn.root()
 
-        #create the mappings
-        if 'user_list' not in self.root:
-            self.root['user_list'] = dict()
-        if 'places_list' not in self.root:
-            self.root['places_list'] = dict()
-        if 'transactions' not in self.root:
-            self.root['transactions'] = dict()
-        if 'transaction_count' not in self.root:
-            self.root['transaction_count'] = 0
-        if 'places_count' not in self.root:
-            self.root['places_count'] = 0
-        
-        Transaction.transaction_id = self.root['transaction_count']
-        Place.places_count = self.root['places_count']
+            # create the mappings
+            if 'user_list' not in self.root:
+                self.root['user_list'] = dict()
+            if 'places_list' not in self.root:
+                self.root['places_list'] = dict()
+            if 'transactions' not in self.root:
+                self.root['transactions'] = dict()
+            if 'transaction_count' not in self.root:
+                self.root['transaction_count'] = 0
+            if 'places_count' not in self.root:
+                self.root['places_count'] = 0
 
-        self.user_list = self.root['user_list']
-        self.places_list = self.root['places_list']
-        self.transactions = self.root['transactions']
+            global transaction_id, places_count
+            transaction_id = self.root['transaction_count']
+            places_count = self.root['places_count']
 
-    def __exit__(self, exc_type, exc_val, exc_tb):
-        self.root['transaction_count'] = Transaction.transaction_id
-        self.root['places_count'] = Place.places_count
-        transaction.commit()
-        self.conn.close()
+            print(">", transaction_id)
+            print(">", places_count)
 
-    def get_user(self, user_id):
-        return self.user_list.get(user_id, None)
+            self.user_list = self.root['user_list']
+            self.places_list = self.root['places_list']
+            self.transactions = self.root['transactions']
 
-    def add_user(self, user_id, data):
-        self.user_list[user_id] = data
-        transaction.commit()
+        def __exit__(self, exc_type, exc_val, exc_tb):
+            self.root['transaction_count'] = Transaction.transaction_id
+            self.root['places_count'] = Place.places_count
+            transaction.commit()
+            self.conn.close()
 
-    def add_transaction(self, id, data):
-        self.transactions[id] = data
-        transaction.commit()
+        def get_user(self, user_id):
+            return self.user_list.get(user_id, None)
 
-    def add_place(self, place_id, data):
-        self.places_list[place_id] = data
-        transaction.commit()
+        def add_user(self, user_id, data):
+            self.user_list[user_id] = data
+            transaction.commit()
 
-    def get_place(self, place_id):
-        return self.places_list.get(place_id, None)
+        def add_transaction(self, t_id, data):
+            self.transactions[t_id] = data
+            transaction.commit()
 
-    def get_transactions(self):
-        ret = list()
-        for i, j in self.transactions.items():
-            user = self.user_list[j[0]]
-            place = self.places_list[j[1]]
-            ret.append((i, user, place))
-        return ret
+        def add_place(self, place_id, data):
+            self.places_list[place_id] = data
+            transaction.commit()
 
-    def commit(self):
-        transaction.commit()
+        def get_place(self, place_id):
+            return self.places_list.get(place_id, None)
+
+        def get_transactions(self):
+            ret = list()
+            for i, j in self.transactions.items():
+                user = self.user_list[j[0]]
+                place = self.places_list[j[1]]
+                ret.append((i, user, place))
+            return ret
+
+        def commit(self):
+            transaction.commit()
+
+        def __str__(self):
+            return 'self' + self.val
+
+    instance = None
+
+    def __new__(cls): # __new__ always a classmethod
+        if not Database.instance:
+            Database.instance = Database.__Database()
+        return Database.instance
+
+    def __getattr__(self, name):
+        return getattr(self.instance, name)
+
+    def __setattr__(self, name):
+        return setattr(self.instance, name)
