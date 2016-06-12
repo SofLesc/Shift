@@ -98,67 +98,78 @@ def create_page():
     else:
         return data_create_page
 
+
 @app.route('/assets/fonts/<filename>')
 def get_data0(filename):
     return send_from_directory('assets/fonts', filename)
+
 
 @app.route('/assets/fonts/fontawesome/<filename>')
 def get_data1(filename):
     return send_from_directory('assets/fonts/fontawesome', filename)
 
+
 @app.route('/assets/css/<filename>')
 def get_data2(filename):
     return send_from_directory('assets/css', filename)
+
 
 @app.route('/assets/images/<filename>')
 def get_data3(filename):
     return send_from_directory('assets/images', filename)
 
+
 @app.route('/assets/images/blog/<filename>')
 def get_data4(filename):
     return send_from_directory('assets/images/blog', filename)
+
 
 @app.route('/assets/images/works/<filename>')
 def get_data5(filename):
     return send_from_directory('assets/images/works', filename)
 
+
 @app.route('/assets/images/ico/<filename>')
 def get_data6(filename):
     return send_from_directory('assets/images/ico', filename)
+
 
 @app.route('/assets/bootstrap/<filename>')
 def get_data7(filename):
     return send_from_directory('assets/bootstrap', filename)
 
+
 @app.route('/assets/bootstrap/fonts/<filename>')
 def get_data8(filename):
     return send_from_directory('assets/bootstrap/fonts', filename)
+
 
 @app.route('/assets/bootstrap/css/<filename>')
 def get_data9(filename):
     return send_from_directory('assets/bootstrap/css', filename)
 
+
 @app.route('/assets/bootstrap/js/<filename>')
 def get_data10(filename):
     return send_from_directory('assets/bootstrap/js', filename)
+
 
 @app.route('/assets/js/<filename>')
 def get_data11(filename):
     return send_from_directory('assets/js', filename)
 
+
 @app.route('/assets/<filename>')
 def get_data12(filename):
     return send_from_directory('assets', filename)
+
 
 @app.route('/<filename>')
 def get_data13(filename):
     return send_from_directory('.', filename)
 
 
-
 @app.route('/get_image')
-
-
 def get_image():
     try:
         filename = "qrcode/" + request.args.get('id')
