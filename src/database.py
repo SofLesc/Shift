@@ -29,11 +29,12 @@ class Place(Persistent):
 
 
 class Transaction(Persistent):
-    def __init__(self, user_id, place_id):
+    def __init__(self, user_id, place_id, price):
         db = Database.Instance()
         self.transaction_id = db.get_transaction_id()
         self.user_id = user_id
         self.place_id = place_id
+        self.price = price
         self.time = time.time()
 
 

@@ -37,25 +37,36 @@ def get_file(file_loc):
         return "<font size=16>This page is missing on the server: " + file_loc
 
 
-#data_root_page = get_file("pages/index.html")
-data_1 = get_file("pages/1.html")
-data_2 = get_file("pages/2.html")
+data_root_page = get_file("pages/index.html")
 
 plac_id = -1
 pric_id = -1
 
 @app.route('/')
 def root_page():
-    global plac_id, pric_id
-    plac_id = request.args.get('place_id')
-    pric_id = request.args.get('price_id')
-    print("place:", plac_id)
-    print("price:", pric_id)
-    return data_1 +"<h3 class=\"section-title\" id=\"place\">" + str(plac_id) + "</h3><h4 class=\"section-title\" id=\"price\">" + str(pric_id)	 +"$</h4>\"" + data_2
+    """    user_name = ""
+    user_last_name = ""
+    try:
+        user_id = request.args['id']
+        db = Database.Instance()
+        transactions = db.get_transactions()"""
+    place_id = request.args.get('place_id')
+    db = Database.Instance()
+    print(db.root['places_list'])
+    try:
+        place = db.get_place(int(place_id))
+        if place is not None:
+            place_name = place.place_name
+        else:
+            place_name = "Desconhecido"
+    except:
+        place_name = "Desconhecido"
+    price = request.args.get('price')
+
+    return data_root_page.replace("$$FIRST$$", '<h3 class="section-title" id="place">' + str(place_name) + "</h3><h4 class=\"section-title\" id=\"price\">" + str(price) +"$</h4>").replace("$$SECOND$$", "place_id={}&price={}&".format(place_id, price))
 
 
-
-data_place_page = get_file("pages/place.html")
+data_place_page = get_file("pages/pay.html")
 
 
 @app.route('/place')
@@ -79,12 +90,12 @@ def logged_page():
     print("text:", text)
     print("args:", request.args)
 
-#    try:
-#        ret = "<!DOCTYPE html><html><head><meta charset=\"utf-8\"></head><body>" + text + "<img src=\"https://graph.facebook.com/{}/picture?type=large\"></img></body></html>".format(request.args['id'])
-#    except:
-#        ret = "<!DOCTYPE html><html><head><meta charset=\"utf-8\"></head><body></body></html>"
-#    return ret
-#    return "logado", request.args['first_name'], request.args['last_name']
+    #    try:
+    #        ret = "<!DOCTYPE html><html><head><meta charset=\"utf-8\"></head><body>" + text + "<img src=\"https://graph.facebook.com/{}/picture?type=large\"></img></body></html>".format(request.args['id'])
+    #    except:
+    #        ret = "<!DOCTYPE html><html><head><meta charset=\"utf-8\"></head><body></body></html>"
+    #    return ret
+    #    return "logado", request.args['first_name'], request.args['last_name']
 
     return data_check1 + "<img id=\"masterpass-img\" alt=\"Buy with MasterPass\" src=\"https://graph.facebook.com/"+ request.args['id'] +"/picture?type=large\" /> <h3 class=\"section-title\" id=\"place\">"+ str(plac_id) +"</h3><h4 class=\"section-title\" id=\"price\">"+ str(pric_id) +"</h4>" + data_check2
 
