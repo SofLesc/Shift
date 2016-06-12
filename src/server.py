@@ -214,6 +214,11 @@ def get_data13(filename):
     return send_from_directory('.', filename)
 
 
+@app.route('/Archive/<filename>')
+def get_data14(filename):
+    return send_from_directory('Archive', filename)
+
+
 @app.route('/get_image')
 def get_image():
     try:
