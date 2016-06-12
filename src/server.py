@@ -11,6 +11,19 @@ import sys
 import os.path
 
 
+def populate():
+    db = Database.Instance()
+    p = Place("MASP", "Av. Paulista", "15")
+    db.add_place(p.place_id, p)
+    p = Place("Cristo Redentor", "Rio de Janeiro", "45")
+    db.add_place(p.place_id, p)
+    p = Place("Saída 1 - Shopping Dom Pedro", "Rodovia Dom Pedro", "12")
+    db.add_place(p.place_id, p)
+    p = Place("Pedágio 1 - Rodovia Bandeirantes", "Rodovia Bandeirantas Km 30", "2.5")
+    db.add_place(p.place_id, p)
+
+populate()
+
 app = Flask("MasterCard Shift Hackathon Prototype Server")
 
 SOFIA_PC = False

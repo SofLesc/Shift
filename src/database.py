@@ -86,11 +86,12 @@ class Database:
         if not os.path.isdir('db'):
             os.mkdir('db')
 
-        storage = FileStorage('db/database.fs')
+        """storage = FileStorage('db/database.fs')
         db = DB(storage)
         self.conn = db.open()
         self.root = self.conn.root()
-
+"""
+        self.root = dict()
         # create the mappings
         if 'user_list' not in self.root:
             self.root['user_list'] = dict()
@@ -103,7 +104,8 @@ class Database:
         if 'places_count' not in self.root:
             self.root['places_count'] = 0
 
-        transaction.commit()
+        #transaction.commit()
+
 
     def get_transaction_id(self):
         self.root['transaction_count'] += 1
@@ -116,10 +118,9 @@ class Database:
         return self.root['places_count']
 
     def __del__(self):
-        self.root['transaction_count'] = self.transaction_id
-        self.root['places_count'] = self.places_count
-        transaction.commit()
-        self.conn.close()
+        pass
+        #transaction.commit()
+        #self.conn.close()
 
     def get_user(self, user_id):
         return self.user_list.get(user_id, None)
