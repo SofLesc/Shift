@@ -287,31 +287,19 @@ ul.list-check li::before {
 
 /* === MAIN === */
 .section-padding {
-	padding: 120px 0 100px;
+	padding: 100px 0 100px;
 }
 
 
 /* SECTION TITLE
 ----------------------------------------------------- */
 .section-title {
-    margin-bottom: 80px;
+    margin-bottom: 50px;
     text-align: center;
-    font-size: 50px;
+    font-size: 16px;
     line-height: 50px;
     color: #2c3e50;
     position: relative;
-}
-
-.section-title::after {
-    content: "";
-    background: url(../../assets/images/section-divider.png) no-repeat 0 0;
-    height: 15px;
-    width: 113px;
-    position: absolute;
-    left: 0;
-    right: 0;
-    bottom: -40px;
-    margin: 0 auto;
 }
 
 
@@ -1660,7 +1648,7 @@ Icon for all respective meta
 
 /* === About Section === */
 .short-info {
-    margin-bottom: 40px;
+    margin-bottom: 20px;
 }
 
 .short-info h3 {
