@@ -77,7 +77,6 @@
     <!-- About Section -->
     <section id="about" class="about-section section-padding">
       <div class="container">
-	<img id="masterpass-img" alt="Buy with MasterPass" src="https://www.simplify.com/commerce/images/mcpp_wllt_btn_chk_180x042px.png" />
         <h3 class="section-title" id="place"></h3>
         <h4 class="section-title" id="price"></h4>
 
