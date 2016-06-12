@@ -48,7 +48,7 @@ def root_page():
     pric_id = request.args.get('price_id')
     print("place:", plac_id)
     print("price:", pric_id)
-    return data_1 +"<h3 class=\"section-title\" id=\"place\">" + str(plac_id) + "</h3><h4 class=\"section-title\" id=\"price\">" + str(pric_id)	 +"$</h4>\"" + data_2
+    return data_1 +"<h3 class=\"section-title\" id=\"place\">" + str(plac_id) + "</h3><h4 class=\"section-title\" id=\"price\">" + str(pric_id) +"</h4>\"" + data_2
 		
 
 

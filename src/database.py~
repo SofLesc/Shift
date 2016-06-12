@@ -23,7 +23,7 @@ places_count = None
 
 def get_place_id():
     global places_count
-    print("curr places:", places_count)
+    print("curr places:",places_count)
     places_count += 1
     return places_count
 
