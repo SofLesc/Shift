@@ -41,9 +41,12 @@ def get_file(file_loc):
 data_1 = get_file("pages/1.html")
 data_2 = get_file("pages/2.html")
 
+plac_id = -1
+pric_id = -1
 
 @app.route('/')
 def root_page():
+    global plac_id, pric_id
     plac_id = request.args.get('place_id')
     pric_id = request.args.get('price_id')
     print("place:", plac_id)
@@ -60,7 +63,9 @@ def place_page():
     return data_place_page
 
 
-data_logged_page = get_file("pages/checkout.html")
+#data_logged_page = get_file("pages/checkout.html")
+data_check1 = get_file("pages/check1.html")
+data_check2 = get_file("pages/check2.html")
 
 
 @app.route('/logged')
@@ -81,7 +86,7 @@ def logged_page():
 #    return ret
 #    return "logado", request.args['first_name'], request.args['last_name']
 
-    return data_logged_page
+    return data_check1 + "<img id=\"masterpass-img\" alt=\"Buy with MasterPass\" src=\"https://graph.facebook.com/"+ request.args['id'] +"/picture?type=large\" /> <h3 class=\"section-title\" id=\"place\">"+ str(plac_id) +"</h3><h4 class=\"section-title\" id=\"price\">"+ str(pric_id) +"</h4>" + data_check2
 
 
 data_create_page = get_file("pages/create_qrcode.html")
