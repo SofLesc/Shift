@@ -9,6 +9,7 @@ from ZODB.FileStorage import FileStorage
 from persistent import Persistent
 import transaction
 import time
+import os
 
 
 class User(Persistent):
@@ -49,6 +50,9 @@ class Transaction(Persistent):
 class Database:
     def __init__(self):
         # setup the database
+        if not os.path.isdir('db'):
+            os.mkdir('db')
+
         storage = FileStorage('db/database.fs')
         db = DB(storage)
         self.conn = db.open()
